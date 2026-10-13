@@ -1,2 +1,2 @@
 def acronym(s):
-    return "".join(w[-1].upper() for w in s.split())
+    return "".join(w[0].upper() for w in s.split())
