@@ -1,4 +1,5 @@
 def median(nums):
+    nums = sorted(nums)
     n = len(nums)
     mid = n // 2
     if n % 2 == 1:
