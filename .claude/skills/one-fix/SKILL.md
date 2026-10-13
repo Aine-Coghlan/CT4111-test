@@ -13,11 +13,10 @@ Each file in `src/` is a tiny Python exercise containing one deliberate bug. The
 
    > Hello from one-fix skill!
 
-2. **Pick a random file that still has an error.** Skip files that already have a fix in progress (an open PR or an existing `fix/<name>` branch):
+2. **Pick a random file that still has an error.** Skip files that already have a fix in progress (an existing local or remote `fix/<name>` branch):
 
    ```bash
    git fetch --quiet origin 2>/dev/null
-   gh pr list --state open --json headRefName -q '.[].headRefName' 2>/dev/null
    git branch -a --list '*fix/*'
    python3 -c "import glob, random; print(random.choice(sorted(glob.glob('src/*.py'))))"
    ```
@@ -28,7 +27,7 @@ Each file in `src/` is a tiny Python exercise containing one deliberate bug. The
 
 4. **Ask for approval.** Show the user the file name, a one-sentence explanation of the bug, and the proposed change as a diff. Then ask with AskUserQuestion whether to apply it (options: approve, or skip and pick another file). Do not edit anything before they approve. If they choose to skip, go back to step 2. If they pick "Other" with feedback, revise the fix and ask again.
 
-5. **Apply and open the PR.** Once approved:
+5. **Apply and push.** Once approved:
 
    ```bash
    git switch main && git pull --ff-only
@@ -37,9 +36,8 @@ Each file in `src/` is a tiny Python exercise containing one deliberate bug. The
    git add src/<name>.py
    git commit -m "Fix <name>: <short description of bug>"
    git push -u origin fix/<name>
-   gh pr create --base main --title "Fix <name>" --body "<one-sentence description of the bug and the fix>"
    ```
 
-   Check that `git diff --stat main` shows only `src/<name>.py` before committing. If there is no remote or `gh` is not authenticated, stop after the commit and tell the user what is missing.
+   Check that `git diff --stat main` shows only `src/<name>.py` before committing. If the push fails, stop after the commit and give the user the `git push` command to run themselves.
 
-6. **Report.** Reply with the PR link and a one-line summary of the fix, then switch back to `main`.
+6. **Report.** Reply with a one-line summary of the fix and the link for the user to open the PR in their browser: `https://github.com/<owner>/<repo>/pull/new/fix/<name>` (take owner and repo from `git remote get-url origin`). Then switch back to `main`.
